@@ -1,0 +1,11 @@
+# User-agent: *
+# Disallow: /account/
+# Disallow: /checkout/
+# Disallow: /cart/
+# Disallow: /api/
+
+# Allow all for now (uncomment above for production)
+User-agent: *
+Allow: /
+
+Sitemap: https://pranajiva.in/sitemap.xml
