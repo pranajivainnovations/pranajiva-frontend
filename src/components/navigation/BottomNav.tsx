@@ -27,12 +27,12 @@ export function BottomNav() {
                   href={href}
                   className={`flex flex-col items-center gap-1 transition-colors ${
                     isActive
-                      ? 'text-cream'
-                      : 'text-cream/70 hover:text-cream'
+                      ? 'text-accent'
+                      : 'text-white/50 hover:text-white'
                   }`}
                 >
-                  <Icon className="w-6 h-6" />
-                  <span className="text-xs font-body">{label}</span>
+                  <Icon className="w-5 h-5" />
+                  <span className="text-[10px] tracking-wide font-light">{label}</span>
                 </Link>
               </li>
             );

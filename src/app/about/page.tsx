@@ -183,7 +183,7 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* Product Categories */}
+        {/* Our Collections */}
         <div className="mb-12">
           <h2 className="text-3xl font-semibold text-sage-primary mb-8 text-center" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
             Our Collections
@@ -191,27 +191,27 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-4 gap-6" style={{ fontFamily: 'Josefin Sans, sans-serif' }}>
             
             <div className="card-premium p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-3">💓</div>
-              <h3 className="font-semibold text-gray-800 mb-2">Pulse</h3>
-              <p className="text-sm text-gray-600">Premium pleasure devices</p>
-            </div>
-
-            <div className="card-premium p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-3">🌊</div>
-              <h3 className="font-semibold text-gray-800 mb-2">Flow</h3>
-              <p className="text-sm text-gray-600">Intimate lubricants & enhancers</p>
-            </div>
-
-            <div className="card-premium p-6 text-center hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-3">🕯️</div>
-              <h3 className="font-semibold text-gray-800 mb-2">Ritual</h3>
-              <p className="text-sm text-gray-600">Sensory experiences & aromatherapy</p>
+              <div className="text-4xl mb-3">🌿</div>
+              <h3 className="font-semibold text-gray-800 mb-2">Core Essentials</h3>
+              <p className="text-sm text-gray-600">Foundation supplements for daily vitality</p>
             </div>
 
             <div className="card-premium p-6 text-center hover:shadow-xl transition-shadow">
               <div className="text-4xl mb-3">✨</div>
-              <h3 className="font-semibold text-gray-800 mb-2">Care</h3>
-              <p className="text-sm text-gray-600">Hygiene & aftercare essentials</p>
+              <h3 className="font-semibold text-gray-800 mb-2">Vedic Rituals</h3>
+              <p className="text-sm text-gray-600">Ayurvedic formulations rooted in tradition</p>
+            </div>
+
+            <div className="card-premium p-6 text-center hover:shadow-xl transition-shadow">
+              <div className="text-4xl mb-3">💫</div>
+              <h3 className="font-semibold text-gray-800 mb-2">Glow Care</h3>
+              <p className="text-sm text-gray-600">Beauty and radiance from within</p>
+            </div>
+
+            <div className="card-premium p-6 text-center hover:shadow-xl transition-shadow">
+              <div className="text-4xl mb-3">🌸</div>
+              <h3 className="font-semibold text-gray-800 mb-2">Intimate Wellness</h3>
+              <p className="text-sm text-gray-600">Premium intimate wellness essentials</p>
             </div>
 
           </div>

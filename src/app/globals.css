@@ -1,55 +1,46 @@
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Josefin+Sans:wght@300;400&family=Space+Mono&display=swap');
+/* ── Fonts ────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Space+Mono&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── Base ─────────────────────────────────────────────────────────── */
 @layer base {
   :root {
-    /* Primary Brand Colors */
-    --color-prana-sage: #2D3A30;
-    --color-jiva-mint: #9adbc6;
-    --color-champagne: #f7eba5;
-
-    /* Backgrounds & Neutrals */
-    --color-unbleached: #f9f7f2;
-    --color-sand-muted: #eedbc3;
-    --color-charcoal-soft: #1a1a1a;
-    --color-cream: #fffef7;
-
-    /* UI Feedback */
-    --color-success: #6aa495;
-    --color-error: #d9534f;
-    --color-stealth-overlay: rgba(95, 116, 100, 0.95);
+    --color-surface: #F7F5F2;
+    --color-surface-warm: #EFEAE4;
+    --color-ink: #1A1A1A;
+    --color-ink-light: #6B6B6B;
+    --color-accent: #C2A36B;
+    --color-brand-dark: #2B2524;
+    --color-cream: #FFFEF7;
+    --color-stealth-overlay: rgba(43, 37, 36, 0.95);
   }
 
   html {
-    font-family: 'Josefin Sans', sans-serif;
+    font-family: 'Inter', system-ui, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
-    @apply text-charcoal-soft bg-unbleached;
-    line-height: 1.6;
+    @apply bg-surface text-ink;
+    font-weight: 400;
+    line-height: 1.7;
+    letter-spacing: 0;
     transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  /* Stealth Mode Styles */
   body.stealth-mode {
     @apply bg-stealth-bg text-stealth-text;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: 'Cormorant Garamond', serif;
-    letter-spacing: -0.02em;
-    @apply text-prana-sage;
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    @apply text-ink;
+    letter-spacing: -0.01em;
   }
 
   body.stealth-mode h1,
@@ -60,92 +51,157 @@
   body.stealth-mode h6 {
     @apply text-stealth-text;
   }
+
+  ::selection {
+    background-color: var(--color-accent);
+    color: white;
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(194, 163, 107, 0.15);
+  }
 }
 
+/* ── Components ───────────────────────────────────────────────────── */
 @layer components {
-  /* Premium Card Component */
+  /* Premium Card */
   .card-premium {
-    @apply bg-unbleached rounded-3xl border border-white/30 transition-transform duration-300;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    @apply bg-white rounded-card border border-black/[0.04] shadow-card;
+    transition: box-shadow 0.5s ease, transform 0.5s ease, border-color 0.5s ease;
   }
-
-  .card-premium:active {
-    transform: scale(0.98);
+  .card-premium:hover {
+    @apply shadow-card-hover;
+    transform: translateY(-3px);
+    border-color: rgba(194, 163, 107, 0.2);
   }
+  .card-luxury { @apply card-premium; }
 
   body.stealth-mode .card-premium {
     @apply bg-white border-gray-200;
   }
 
-  /* Tech Label Component */
-  .tech-label {
-    font-family: 'Space Mono', monospace;
-    @apply text-xs uppercase tracking-wider;
+  /* Overline / label */
+  .label {
+    @apply text-caption uppercase font-body;
+    letter-spacing: 0.14em;
+    color: var(--color-accent);
   }
 
-  /* Bottom Navigation Bar */
-  .bottom-nav {
-    @apply fixed bottom-0 left-0 right-0 z-50 border-t border-prana-sage/20;
-    background-color: #2D3A30;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+  /* Ornamental divider */
+  .divider-ornament {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .divider-ornament::before,
+  .divider-ornament::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--color-accent), transparent);
+    opacity: 0.3;
   }
 
-  .bottom-nav a {
-    @apply text-cream/80;
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2
+           px-8 py-3.5 rounded-full
+           font-body font-medium text-sm tracking-wide
+           transition-all duration-300 active:scale-[0.97];
+    background-color: var(--color-brand-dark);
+    color: white;
   }
-
-  .bottom-nav a.active,
-  .bottom-nav a:hover {
-    @apply text-cream;
+  .btn-primary:hover {
+    background-color: #3D3230;
   }
+  .btn-velvet { @apply btn-primary; }
 
-  body.stealth-mode .bottom-nav {
-    @apply bg-white/90 border-gray-200;
-  }
-
-  body.stealth-mode .bottom-nav a {
-    @apply text-charcoal-soft/50;
-  }
-
-  /* Velvet Button */
-  .btn-velvet {
-    @apply bg-prana-sage px-6 py-3 rounded-full font-body font-normal;
-    color: var(--color-cream);
-    @apply transition-all duration-300 hover:bg-prana-sage/90 active:scale-95;
-    box-shadow: 0 2px 20px rgba(95, 116, 100, 0.2);
-  }
-
+  body.stealth-mode .btn-primary,
   body.stealth-mode .btn-velvet {
     @apply bg-stealth-accent text-white;
   }
 
-  /* Discreet Badge */
-  .badge-discreet {
-    @apply inline-flex items-center gap-2 px-4 py-2 rounded-full;
-    @apply bg-prana-sage/10 text-prana-sage border-2 border-prana-sage;
+  /* Secondary button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2
+           px-8 py-3.5 rounded-full
+           font-body font-medium text-sm tracking-wide
+           border text-ink
+           transition-all duration-300 active:scale-[0.97];
+    border-color: rgba(26, 26, 26, 0.15);
+  }
+  .btn-secondary:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
   }
 
-  /* Quick Exit Button */
+  /* Ghost button */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2
+           px-5 py-2.5 rounded-full
+           font-body text-sm text-ink-light
+           hover:text-ink hover:bg-surface-warm
+           transition-all duration-300;
+  }
+
+  /* Bottom nav */
+  .bottom-nav {
+    @apply fixed bottom-0 left-0 right-0 z-50 border-t;
+    background-color: var(--color-brand-dark);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+  .bottom-nav a { @apply text-white/50; }
+  .bottom-nav a.active,
+  .bottom-nav a:hover { color: var(--color-accent); }
+
+  body.stealth-mode .bottom-nav {
+    @apply bg-white/90 border-gray-200;
+  }
+  body.stealth-mode .bottom-nav a {
+    @apply text-gray-500;
+  }
+
+  /* Quick exit */
   .quick-exit-btn {
-    @apply fixed top-4 right-4 z-[100] px-4 py-2 rounded-full;
-    background-color: var(--color-prana-sage);
-    color: var(--color-cream);
-    @apply text-sm font-body opacity-0 pointer-events-none transition-opacity duration-200;
+    @apply fixed top-4 right-4 z-[100] px-4 py-2 rounded-full
+           text-sm font-body opacity-0 pointer-events-none
+           transition-opacity duration-200;
+    background-color: var(--color-brand-dark);
+    color: white;
   }
-
   .quick-exit-btn.visible {
     @apply opacity-100 pointer-events-auto;
   }
-}
 
-@layer utilities {
-  /* Smooth page transitions */
-  .page-enter {
-    animation: fade-in 0.8s ease-in-out;
+  /* Badge */
+  .badge-discreet {
+    @apply inline-flex items-center gap-2 px-3 py-1.5 rounded-full
+           text-xs border;
+    background-color: var(--color-accent);
+    background-opacity: 0.08;
+    border-color: var(--color-accent);
+    color: var(--color-accent);
   }
 
-  /* Glass morphism effect */
+  /* Tech label */
+  .tech-label {
+    font-family: 'Space Mono', monospace;
+    @apply text-xs uppercase tracking-wider;
+  }
+}
+
+/* ── Utilities ────────────────────────────────────────────────────── */
+@layer utilities {
+  .page-enter {
+    animation: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
   .glass {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
@@ -153,26 +209,13 @@
     border: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  /* Custom scrollbar */
-  .custom-scrollbar::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-track {
-    @apply bg-sand-muted/20;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb {
-    @apply bg-prana-sage/30 rounded-full;
-  }
-
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    @apply bg-prana-sage/50;
-  }
+  .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { @apply bg-ink/10 rounded-full; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { @apply bg-ink/20; }
 }
 
-/* Age Gate Overlay */
+/* ── Global (non-layer) ──────────────────────────────────────────── */
 .age-gate-overlay {
   @apply fixed inset-0 z-[999] flex items-center justify-center;
   background: var(--color-stealth-overlay);
@@ -180,54 +223,10 @@
   -webkit-backdrop-filter: blur(20px);
 }
 
-/* Loading Animation */
 @keyframes prana-pulse {
-  0%,
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 0.6;
-  }
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.05); opacity: 0.7; }
 }
-
 .loading-pulse {
   animation: prana-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-/* Selection and Focus States */
-::selection {
-  background-color: #2D3A30;
-  color: #fffef7;
-}
-
-::-moz-selection {
-  background-color: #2D3A30;
-  color: #fffef7;
-}
-
-/* Focus Visible */
-*:focus-visible {
-  outline: 2px solid #2D3A30;
-  outline-offset: 2px;
-}
-
-/* Input Focus */
-input:focus,
-textarea:focus,
-select:focus {
-  border-color: #2D3A30;
-  box-shadow: 0 0 0 3px rgba(45, 58, 48, 0.1);
-}
-
-/* Button Active States */
-button:active {
-  transform: scale(0.98);
-}
-
-/* Link Hover */
-a:hover {
-  color: #2D3A30;
 }

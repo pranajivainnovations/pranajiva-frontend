@@ -14,7 +14,12 @@ const nextConfig = {
         port: '',
         pathname: '/**',
       },
-      // If you plan to host your own images later, add your own S3/Minio URL here too
+      {
+        protocol: 'https',
+        hostname: 'pranajiva-innovations.s3.eu-north-1.amazonaws.com',
+        port: '',
+        pathname: '/**',
+      },
       {
         protocol: 'http',
         hostname: 'localhost',
