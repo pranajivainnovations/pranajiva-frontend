@@ -85,8 +85,8 @@ export default function ContactPage() {
                   <h3 className="font-semibold text-gray-800 mb-1" style={{ fontFamily: 'Cormorant Garamond, serif' }}>
                     Call Us
                   </h3>
-                  <a href="tel:+911234567890" className="text-sage-primary hover:underline text-sm" style={{ fontFamily: 'Josefin Sans, sans-serif' }}>
-                    +91 123 456 7890
+                  <a href="tel:+919821101868" className="text-sage-primary hover:underline text-sm" style={{ fontFamily: 'Josefin Sans, sans-serif' }}>
+                    +91 982 110 1868
                   </a>
                   <p className="text-xs text-gray-600 mt-1" style={{ fontFamily: 'Josefin Sans, sans-serif' }}>
                     Mon-Sat, 10 AM - 7 PM IST
@@ -106,7 +106,7 @@ export default function ContactPage() {
                   </h3>
                   <p className="text-sm text-gray-700" style={{ fontFamily: 'Josefin Sans, sans-serif' }}>
                     PranaJiva Wellness Pvt. Ltd.<br />
-                    Mumbai, Maharashtra<br />
+                    Ghaziabad, Uttar Pradesh<br />
                     India
                   </p>
                 </div>

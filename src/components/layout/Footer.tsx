@@ -111,11 +111,6 @@ export default function Footer() {
                   Terms of Service
                 </Link>
               </li>
-              <li>
-                <Link href="/age-verification" className="text-cream/80 hover:text-champagne transition-colors">
-                  Age Verification
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -133,13 +128,13 @@ export default function Footer() {
               </li>
               <li className="flex items-start space-x-2 text-cream/80">
                 <Phone size={16} className="mt-1 flex-shrink-0" />
-                <a href="tel:+911234567890" className="hover:text-champagne transition-colors">
-                  +91 123 456 7890
+                <a href="tel:+919821101868" className="hover:text-champagne transition-colors">
+                  +91 982 110 1868
                 </a>
               </li>
               <li className="flex items-start space-x-2 text-cream/80">
                 <MapPin size={16} className="mt-1 flex-shrink-0" />
-                <span>Mumbai, Maharashtra, India</span>
+                <span>Ghaziabad, Uttar Pradesh, India</span>
               </li>
             </ul>
 
