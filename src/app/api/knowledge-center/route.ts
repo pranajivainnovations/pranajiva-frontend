@@ -17,6 +17,8 @@ if (process.env.NODE_ENV === 'development') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 }
 
+
+export const dynamic = 'force-dynamic'; // Disable static generation
 export const revalidate = 3600; // ISR - Revalidate every hour
 
 export async function GET(request: NextRequest) {
