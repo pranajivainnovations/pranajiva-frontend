@@ -51,6 +51,7 @@ const promises = [
 ];
 
 export default function HomePage() {
+  const BRAND = "pranajiva";
   const { isStealthMode } = useStealthMode();
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
@@ -64,8 +65,11 @@ export default function HomePage() {
           medusaClient.products.list({ limit: 4, expand: "variants,variants.prices,collection,type" }),
           medusaClient.collections.list({ limit: 50 }),
         ]);
+        const brandCollections = (collectionsRes.collections as Array<Collection & { metadata?: Record<string, unknown> }>).filter(
+          (col) => String(col.metadata?.brand || "").toLowerCase() === BRAND
+        );
         setFeaturedProducts(productsRes.products as Product[]);
-        setCollections(collectionsRes.collections as Collection[]);
+        setCollections(brandCollections as Collection[]);
       } catch (error) {
         console.error("Failed to fetch homepage data:", error);
       } finally {

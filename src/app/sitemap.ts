@@ -23,7 +23,9 @@ async function fetchCollections() {
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data.collections || [];
+    return (data.collections || []).filter(
+      (c: any) => String(c.metadata?.brand || '').toLowerCase() === 'pranajiva'
+    );
   } catch {
     return [];
   }

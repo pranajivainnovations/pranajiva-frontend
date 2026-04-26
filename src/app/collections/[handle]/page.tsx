@@ -24,6 +24,7 @@ import type { Collection, CollectionProduct } from "@/types/product";
 /* ------------------------------------------------------------------ */
 
 export default function CollectionPage() {
+  const BRAND = "pranajiva";
   const params = useParams();
   const handle = params.handle as string;
 
@@ -53,6 +54,12 @@ export default function CollectionPage() {
       });
       const col = collections[0];
       if (!col) {
+        setCollection(null);
+        setProducts([]);
+        return;
+      }
+      const collectionBrand = String((col as { metadata?: Record<string, unknown> }).metadata?.brand || "").toLowerCase();
+      if (collectionBrand !== BRAND) {
         setCollection(null);
         setProducts([]);
         return;
