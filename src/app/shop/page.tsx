@@ -10,6 +10,9 @@ import { useStealthMode } from "@/stores/stealth-mode";
 import { Eye, EyeOff, Search, SlidersHorizontal, X, ArrowRight } from "lucide-react";
 import { medusaClient } from "@/lib/medusa";
 import { ProductCard, ProductCardSkeleton } from "@/components/product/ProductCard";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
+import { RecentlyViewed } from "@/components/product/RecentlyViewed";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 interface ProductVariant {
   id: string;
@@ -46,6 +49,7 @@ export default function ShopPage() {
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { products: recentProducts } = useRecentlyViewed();
 
   const [selectedType, setSelectedType] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
@@ -133,6 +137,7 @@ export default function ShopPage() {
     <div className="min-h-screen bg-surface">
       <div className="bg-surface-warm">
         <div className="container mx-auto px-4 py-10">
+          <Breadcrumbs items={[{ label: 'Shop' }]} />
           <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-8">
             <div>
               <p className="label mb-3">Shop</p>
@@ -296,6 +301,9 @@ export default function ShopPage() {
             )}
           </main>
         </div>
+
+        {/* Recently Viewed */}
+        <RecentlyViewed products={recentProducts} />
       </div>
     </div>
   );

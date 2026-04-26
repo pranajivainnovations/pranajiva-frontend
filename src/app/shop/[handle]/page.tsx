@@ -8,6 +8,7 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductDetailClient } from "./ProductDetailClient";
+import { ProductSuggestions } from "./ProductSuggestions";import { ProductReviews } from '@/components/product/ProductReviews';import { ProductJsonLd, BreadcrumbJsonLd } from "@/components/layout/JsonLd";
 
 // Server-side Medusa client for SSR
 const MEDUSA_BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || "http://localhost:9001";
@@ -33,13 +34,15 @@ interface Product {
     values: Array<{ value: string }>;
   }>;
   metadata: Record<string, unknown> | null;
-  collection: { title: string } | null;
+  collection: { title: string; handle?: string } | null;
+  categories?: Array<{ handle: string; parent_category_id?: string | null }>;
+  tags?: Array<{ value: string }>;
 }
 
 async function getProduct(handle: string): Promise<Product | null> {
   try {
     const response = await fetch(
-      `${MEDUSA_BACKEND_URL}/store/products?handle=${handle}&expand=variants,variants.prices,options,options.values,images,collection`,
+      `${MEDUSA_BACKEND_URL}/store/products?handle=${handle}&expand=variants,variants.prices,options,options.values,images,collection,categories,tags`,
       { next: { revalidate: 60 } } // Cache for 60 seconds
     );
     
@@ -64,18 +67,31 @@ export async function generateMetadata({
   
   if (!product) {
     return {
-      title: "Product Not Found | PranaJiva",
+      title: "Product Not Found",
     };
   }
   
+  const price = product.variants?.[0]?.prices?.find(p => p.currency_code === 'inr');
+
   return {
-    title: `${product.title} | PranaJiva`,
+    title: product.title,
     description: product.description || `Shop ${product.title} at PranaJiva - Premium wellness with discreet delivery`,
     openGraph: {
       title: product.title,
       description: product.description || undefined,
-      images: product.thumbnail ? [{ url: product.thumbnail }] : [],
+      images: product.thumbnail ? [{ url: product.thumbnail, width: 800, height: 800 }] : [],
+      type: 'website',
     },
+    twitter: {
+      card: 'summary_large_image',
+      title: product.title,
+      description: product.description || undefined,
+      images: product.thumbnail ? [product.thumbnail] : [],
+    },
+    other: price ? {
+      'product:price:amount': (price.amount / 100).toString(),
+      'product:price:currency': 'INR',
+    } : undefined,
   };
 }
 
@@ -91,5 +107,19 @@ export default async function ProductPage({
     notFound();
   }
   
-  return <ProductDetailClient product={product} />;
+  return (
+    <>
+      <ProductJsonLd product={product} />
+      <BreadcrumbJsonLd
+        items={[
+          { name: 'Home', href: '/' },
+          { name: 'Shop', href: '/shop' },
+          { name: product.title },
+        ]}
+      />
+      <ProductDetailClient product={product} />
+      <ProductReviews productId={product.id} />
+      <ProductSuggestions product={product} />
+    </>
+  );
 }

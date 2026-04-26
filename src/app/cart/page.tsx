@@ -14,6 +14,9 @@ import Image from "next/image";
 import { ShoppingCart, Trash2, Plus, Minus, ArrowRight, Tag, Shield } from "lucide-react";
 import { useCartStore } from "@/stores/cart-store";
 import { formatPrice, getWellnessCategory } from "@/lib/medusa";
+import { CartCrossSell } from "@/components/product/CartCrossSell";
+import { RecentlyViewed } from "@/components/product/RecentlyViewed";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
 
 export default function CartPage() {
   const {
@@ -31,6 +34,7 @@ export default function CartPage() {
   const [discountCode, setDiscountCode] = useState("");
   const [discountError, setDiscountError] = useState<string | null>(null);
   const [applyingDiscount, setApplyingDiscount] = useState(false);
+  const { products: recentProducts } = useRecentlyViewed();
   
   // Initialize cart on mount
   useEffect(() => {
@@ -349,7 +353,13 @@ export default function CartPage() {
               </div>
             </div>
           </div>
+
+          {/* Cross-sell suggestions */}
+          <CartCrossSell items={cart.items} />
         )}
+
+        {/* Recently Viewed */}
+        <RecentlyViewed products={recentProducts} />
       </div>
     </motion.div>
   );

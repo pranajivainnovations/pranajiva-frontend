@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Loader2, ShoppingBag } from "lucide-react";
 import { formatPrice, getVariantPrice } from "@/lib/medusa";
 import { useCartStore } from "@/stores/cart-store";
+import { useToastStore } from "@/stores/toast-store";
 import type { CollectionProduct } from "@/types/product";
 
 interface CollectionProductCardProps {
@@ -15,6 +16,7 @@ interface CollectionProductCardProps {
 
 function CollectionProductCardInner({ product, index }: CollectionProductCardProps) {
   const { addItem, isLoading: cartLoading } = useCartStore();
+  const { addToast } = useToastStore();
   const [isAdding, setIsAdding] = useState(false);
 
   const firstVariant = product.variants?.[0];
@@ -27,10 +29,15 @@ function CollectionProductCardInner({ product, index }: CollectionProductCardPro
       e.stopPropagation();
       if (!firstVariant || isAdding || cartLoading) return;
       setIsAdding(true);
-      await addItem(firstVariant.id, 1);
+      try {
+        await addItem(firstVariant.id, 1);
+        addToast('Added to cart', 'success');
+      } catch {
+        addToast('Failed to add to cart', 'error');
+      }
       setIsAdding(false);
     },
-    [firstVariant, isAdding, cartLoading, addItem]
+    [firstVariant, isAdding, cartLoading, addItem, addToast]
   );
 
   return (

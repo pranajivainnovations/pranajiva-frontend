@@ -12,6 +12,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { medusaClient, formatPrice } from "@/lib/medusa";
 import { useStealthMode } from "@/stores/stealth-mode";
+import { useRecentlyViewed } from "@/hooks/useRecentlyViewed";
+import { RecentlyViewed } from "@/components/product/RecentlyViewed";
+import { TrustBadges } from "@/components/product/TrustBadges";
 
 interface Product {
   id: string;
@@ -52,6 +55,7 @@ export default function HomePage() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([]);
   const [collections, setCollections] = useState<Collection[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { products: recentProducts } = useRecentlyViewed();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -173,8 +177,56 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Featured Products ────────────────────────────────── */}
+      {/* ── Wellness Journey ─────────────────────────────────── */}
       <section className="py-24 md:py-30 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="max-w-xl mx-auto text-center mb-14">
+            <p className="label mb-5">The PranaJiva Path</p>
+            <h2 className="font-heading text-title mb-5">Your Wellness Journey</h2>
+            <p className="text-sm text-ink-light leading-relaxed">
+              Four pillars of Ayurvedic well-being — each building on the last.
+              Discover where to start and let each step guide you forward.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-4 gap-5 mb-12">
+            {[
+              { step: 1, name: 'Nutrition', handle: 'nutrition', tagline: 'Build Your Foundation', icon: '🌿', color: 'bg-emerald-50 border-emerald-200' },
+              { step: 2, name: 'Ayurveda', handle: 'ayurveda', tagline: 'Restore Balance', icon: '🌸', color: 'bg-amber-50 border-amber-200' },
+              { step: 3, name: 'Glow Care', handle: 'glow-care', tagline: 'Radiance From Within', icon: '✨', color: 'bg-rose-50 border-rose-200' },
+              { step: 4, name: 'Intimate Wellness', handle: 'intimate-wellness', tagline: 'Complete Confidence', icon: '💜', color: 'bg-purple-50 border-purple-200' },
+            ].map((pillar, i) => (
+              <Link
+                key={pillar.handle}
+                href={`/categories/${pillar.handle}`}
+                className="group animate-fade-up"
+                style={{ animationDelay: `${i * 100}ms`, animationFillMode: 'backwards' }}
+              >
+                <div className={`${pillar.color} border rounded-card p-6 h-full flex flex-col transition-all duration-300 group-hover:shadow-md group-hover:-translate-y-1`}>
+                  <div className="flex items-center gap-3 mb-3">
+                    <span className="text-2xl">{pillar.icon}</span>
+                    <span className="text-xs font-semibold text-ink-faint tracking-widest uppercase">Step {pillar.step}</span>
+                  </div>
+                  <h3 className="font-heading text-lg font-medium mb-1.5">{pillar.name}</h3>
+                  <p className="text-sm text-ink-light flex-1">{pillar.tagline}</p>
+                  <span className="inline-flex items-center gap-1.5 text-sm text-accent mt-4 group-hover:gap-3 transition-all duration-300 font-medium">
+                    Explore <ArrowRight className="w-3.5 h-3.5" />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center">
+            <Link href="/journey" className="btn-primary">
+              Discover Your Path <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Featured Products ────────────────────────────────── */}
+      <section className="py-24 md:py-30 bg-surface">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-14">
             <div>
@@ -260,6 +312,12 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ── Recently Viewed ──────────────────────────────────── */}
+      <RecentlyViewed products={recentProducts} title="Pick Up Where You Left Off" />
+
+      {/* ── Trust Badges ─────────────────────────────────────── */}
+      <TrustBadges />
 
       {/* ── CTA ──────────────────────────────────────────────── */}
       <section className="py-24 md:py-30 bg-brand-dark text-white">

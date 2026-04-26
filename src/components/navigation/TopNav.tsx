@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { useCategories } from '@/hooks/useCategories';
+import { GlobalSearch } from '@/components/ui/GlobalSearch';
 
 export function TopNav() {
   const { categories, isLoading } = useCategories();
@@ -103,6 +104,15 @@ export function TopNav() {
             >
               Knowledge
             </Link>
+
+            <Link
+              href="/journey"
+              className="px-4 py-2 text-sm font-medium text-amber-700 hover:text-amber-800 transition-colors"
+            >
+              Wellness Journey
+            </Link>
+
+            <GlobalSearch />
           </div>
 
           {/* Mobile menu toggle */}

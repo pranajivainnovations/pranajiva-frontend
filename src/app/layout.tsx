@@ -4,11 +4,29 @@ import { Providers } from './providers';
 import { BottomNav } from '@/components/navigation/BottomNav';
 import { QuickExit } from '@/components/privacy/QuickExit';
 import Footer from '@/components/layout/Footer';
+import { OrganizationJsonLd, WebSiteJsonLd } from '@/components/layout/JsonLd';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://pranajiva.in'),
-  title: 'PranaJiva — Premium Wellness',
-  description: 'Curated wellness products rooted in Ayurveda and modern science.',
+  title: {
+    default: 'PranaJiva — Premium Wellness',
+    template: '%s | PranaJiva',
+  },
+  description: 'Curated wellness products rooted in Ayurveda and modern science. Discreet delivery across India.',
+  keywords: ['Ayurveda', 'wellness', 'supplements', 'intimate wellness', 'discreet delivery', 'PranaJiva', 'India'],
+  authors: [{ name: 'PranaJiva' }],
+  openGraph: {
+    type: 'website',
+    locale: 'en_IN',
+    siteName: 'PranaJiva',
+    title: 'PranaJiva — Premium Wellness',
+    description: 'Curated wellness products rooted in Ayurveda and modern science.',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'PranaJiva — Premium Wellness',
+    description: 'Curated wellness products rooted in Ayurveda and modern science.',
+  },
   robots: {
     index: true,
     follow: true,
@@ -33,6 +51,8 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <OrganizationJsonLd />
+        <WebSiteJsonLd />
       </head>
       <body className="min-h-screen pb-20 antialiased">
         <Providers>

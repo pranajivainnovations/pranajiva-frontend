@@ -28,6 +28,8 @@ import { formatPrice, getWellnessCategory, isDiscreetProduct } from "@/lib/medus
 import { useCartStore } from "@/stores/cart-store";
 import { useCustomerStore } from "@/stores/customer-store";
 import { useStealthMode } from "@/stores/stealth-mode";
+import { useToastStore } from "@/stores/toast-store";
+import { SocialProof } from "@/components/product/SocialProof";
 
 interface ProductVariant {
   id: string;
@@ -65,6 +67,7 @@ export function ProductDetailClient({ product }: Props) {
   const { isStealthMode } = useStealthMode();
   const { addItem, isLoading: cartLoading } = useCartStore();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useCustomerStore();
+  const { addToast } = useToastStore();
   
   // State
   const [selectedVariant, setSelectedVariant] = useState<ProductVariant>(product.variants[0]);
@@ -96,7 +99,12 @@ export function ProductDetailClient({ product }: Props) {
     if (!inStock || isAdding || cartLoading) return;
     
     setIsAdding(true);
-    await addItem(selectedVariant.id, quantity);
+    try {
+      await addItem(selectedVariant.id, quantity);
+      addToast(`${product.title} added to cart`, 'success');
+    } catch {
+      addToast('Failed to add to cart', 'error');
+    }
     setIsAdding(false);
     setAddedToCart(true);
     
@@ -107,8 +115,10 @@ export function ProductDetailClient({ product }: Props) {
   const handleWishlistToggle = () => {
     if (inWishlist) {
       removeFromWishlist(product.id);
+      addToast('Removed from wishlist', 'info');
     } else {
       addToWishlist(product.id, selectedVariant.id);
+      addToast('Added to wishlist', 'success');
     }
   };
   
@@ -287,6 +297,9 @@ export function ProductDetailClient({ product }: Props) {
                 </>
               )}
             </div>
+            
+            {/* Social Proof */}
+            <SocialProof productId={product.id} />
             
             {/* Variant Selection */}
             {product.variants.length > 1 && (

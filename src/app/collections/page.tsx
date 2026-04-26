@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { medusaClient } from "@/lib/medusa";
+import { Breadcrumbs } from "@/components/ui/Breadcrumbs";
 
 interface Collection {
   id: string;
@@ -50,6 +51,7 @@ export default function CollectionsPage() {
     <div className="min-h-screen bg-surface">
       <div className="bg-surface-warm">
         <div className="container mx-auto px-4 py-18 text-center">
+          <Breadcrumbs items={[{ label: 'Collections' }]} />
           <p className="label mb-4">Collections</p>
           <h1 className="font-heading text-display mb-4">Our Collections</h1>
           <p className="text-ink-light max-w-lg mx-auto text-sm font-light">

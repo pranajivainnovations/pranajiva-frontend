@@ -11,6 +11,8 @@ import { formatPrice, getVariantPrice, getWellnessCategory } from "@/lib/medusa"
 import { useCartStore } from "@/stores/cart-store";
 import { useCustomerStore } from "@/stores/customer-store";
 import { useStealthMode } from "@/stores/stealth-mode";
+import { useToastStore } from "@/stores/toast-store";
+import { ProductRatingBadge } from "@/components/product/ProductReviews";
 import { useState, useCallback } from "react";
 
 interface ProductVariant {
@@ -40,6 +42,7 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
   const { isStealthMode } = useStealthMode();
   const { addItem, isLoading: cartLoading } = useCartStore();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useCustomerStore();
+  const { addToast } = useToastStore();
   const [isAdding, setIsAdding] = useState(false);
 
   const inWishlist = isInWishlist(product.id);
@@ -55,18 +58,28 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
       e.stopPropagation();
       if (!firstVariant || isAdding || cartLoading) return;
       setIsAdding(true);
-      await addItem(firstVariant.id, 1);
+      try {
+        await addItem(firstVariant.id, 1);
+        addToast('Added to cart', 'success');
+      } catch {
+        addToast('Failed to add to cart', 'error');
+      }
       setIsAdding(false);
     },
-    [firstVariant, isAdding, cartLoading, addItem]
+    [firstVariant, isAdding, cartLoading, addItem, addToast]
   );
 
   const handleWishlistToggle = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      if (inWishlist) removeFromWishlist(product.id);
-      else if (firstVariant) addToWishlist(product.id, firstVariant.id);
+      if (inWishlist) {
+        removeFromWishlist(product.id);
+        addToast('Removed from wishlist', 'info');
+      } else if (firstVariant) {
+        addToWishlist(product.id, firstVariant.id);
+        addToast('Added to wishlist', 'success');
+      }
     },
     [inWishlist, product.id, firstVariant, removeFromWishlist, addToWishlist]
   );
@@ -130,7 +143,10 @@ export function ProductCard({ product, index = 0 }: ProductCardProps) {
             )}
 
             <div className="flex items-center justify-between pt-1">
-              <span className="text-sm font-medium text-ink">{formattedPrice}</span>
+              <div>
+                <span className="text-sm font-medium text-ink">{formattedPrice}</span>
+                <ProductRatingBadge productId={product.id} />
+              </div>
 
               <button
                 onClick={handleAddToCart}

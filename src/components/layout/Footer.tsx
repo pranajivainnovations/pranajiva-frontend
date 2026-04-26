@@ -1,12 +1,15 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
-import { Instagram, Twitter, Mail, Phone, MapPin } from 'lucide-react'
+import { Instagram, Twitter, Mail, Phone, MapPin, ArrowRight, Loader2 } from 'lucide-react'
+import { useToastStore } from '@/stores/toast-store'
 
 const footerLinks = {
   shop: [
     { label: 'All Products', href: '/shop' },
     { label: 'Collections', href: '/collections' },
+    { label: 'Wellness Journey', href: '/journey' },
     { label: 'Knowledge Center', href: '/knowledge' },
     { label: 'About Us', href: '/about' },
   ],
@@ -20,6 +23,36 @@ const footerLinks = {
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const { addToast } = useToastStore()
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email.trim() || isSubmitting) return
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      addToast('Please enter a valid email address', 'error')
+      return
+    }
+
+    setIsSubmitting(true)
+    try {
+      // Store in localStorage as a simple subscribe list (no backend needed)
+      const stored = JSON.parse(localStorage.getItem('pj-newsletter') || '[]')
+      if (!stored.includes(email.toLowerCase())) {
+        stored.push(email.toLowerCase())
+        localStorage.setItem('pj-newsletter', JSON.stringify(stored))
+      }
+      addToast('Welcome to our wellness community!', 'success')
+      setEmail('')
+    } catch {
+      addToast('Something went wrong. Please try again.', 'error')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
 
   return (
     <footer className="bg-brand-dark text-white/70">
@@ -88,6 +121,32 @@ export default function Footer() {
                 <span>Ghaziabad, Uttar Pradesh, India</span>
               </li>
             </ul>
+          </div>
+        </div>
+
+        {/* Newsletter */}
+        <div className="border-t border-white/[0.06] pt-10 pb-8">
+          <div className="max-w-md mx-auto text-center">
+            <h4 className="font-heading text-lg text-white mb-2">Join Our Wellness Circle</h4>
+            <p className="text-sm text-white/50 mb-5">
+              Tips, rituals, and early access to new products.
+            </p>
+            <form onSubmit={handleNewsletterSubmit} className="flex gap-2">
+              <input
+                type="email"
+                placeholder="your@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 px-4 py-2.5 rounded-full bg-white/[0.08] border border-white/[0.1] text-sm text-white placeholder:text-white/30 outline-none focus:border-accent/50 transition-colors"
+              />
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 bg-accent text-white text-sm font-medium rounded-full hover:bg-accent-dark transition-colors disabled:opacity-50"
+              >
+                {isSubmitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
+              </button>
+            </form>
           </div>
         </div>
 
