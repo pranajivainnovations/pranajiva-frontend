@@ -61,9 +61,24 @@ export default function ShopPage() {
           medusaClient.products.list({ limit: 100, expand: "variants,variants.prices,collection,type" }),
           medusaClient.collections.list({ limit: 50 }),
         ]);
-        setProducts(productsRes.products as Product[]);
-        setFilteredProducts(productsRes.products as Product[]);
-        setCollections(collectionsRes.collections as Collection[]);
+
+        // Filter collections where brand metadata = pranajiva (case-insensitive)
+        const allCollections = collectionsRes.collections as Collection[];
+        const brandCollections = allCollections.filter((col: any) =>
+          String(col.metadata?.brand || '').toLowerCase() === 'pranajiva'
+        );
+
+        // Filter products to only include pranajiva brand products
+        const allProducts = productsRes.products as Product[];
+        const brandProducts = allProducts.filter((p: Product) => {
+          const productBrand = String(p.metadata?.brand || '').toLowerCase();
+          const collectionBrand = String((p.collection as any)?.metadata?.brand || '').toLowerCase();
+          return productBrand === 'pranajiva' || collectionBrand === 'pranajiva';
+        });
+
+        setProducts(brandProducts);
+        setFilteredProducts(brandProducts);
+        setCollections(brandCollections);
       } catch (err) {
         console.error("Failed to fetch products:", err);
         setError("Failed to load products. Please try again later.");

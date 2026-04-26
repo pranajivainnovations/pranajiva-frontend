@@ -22,6 +22,7 @@ const collectionMeta: Record<string, { description: string; image: string; alt: 
   "vedic-rituals":     { description: "Ayurvedic formulations rooted in tradition", image: "/images/collections/vedic-rituals-card.png",     alt: "Vedic Rituals collection" },
   "glow-care":         { description: "Beauty and radiance from within",            image: "/images/collections/glow-care-card.png",         alt: "Glow Care collection" },
   "intimate-wellness": { description: "Premium intimate wellness essentials",       image: "/images/collections/intimate-wellness-card.png", alt: "Intimate Wellness collection" },
+  "nutrition":         { description: "Superfoods and supplements for daily nourishment", image: "/images/collections/core-essentials-card.png", alt: "Nutrition collection" },
 };
 
 export default function CollectionsPage() {
@@ -32,7 +33,11 @@ export default function CollectionsPage() {
     (async () => {
       try {
         const { collections: cols } = await medusaClient.collections.list({ limit: 50 });
-        setCollections(cols as Collection[]);
+        // Filter collections where brand metadata = pranajiva (case-insensitive)
+        const brandCollections = (cols as Collection[]).filter((col) =>
+          String(col.metadata?.brand || '').toLowerCase() === 'pranajiva'
+        );
+        setCollections(brandCollections);
       } catch (err) {
         console.error("Failed to fetch collections:", err);
       } finally {
