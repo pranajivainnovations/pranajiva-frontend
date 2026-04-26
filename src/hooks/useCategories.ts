@@ -12,11 +12,12 @@ export interface Category {
 
 export interface CategoriesResponse {
   success: boolean;
-  data: {
+  data?: {
     categories: Category[];
     total: number;
     allCategories: Category[];
   };
+  error?: string;
 }
 
 /**
@@ -41,10 +42,10 @@ export function useCategories() {
         const data: CategoriesResponse = await response.json();
         
         if (data.success) {
-          setCategories(data.data.categories);
+          setCategories(data.data!.categories);
           setError(null);
         } else {
-          throw new Error(data.data?.error || 'Unknown error occurred');
+          throw new Error(data.error || 'Unknown error occurred');
         }
       } catch (err) {
         setError(err instanceof Error ? err.message : 'An error occurred');
