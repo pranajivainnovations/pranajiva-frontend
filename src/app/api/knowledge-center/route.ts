@@ -1,28 +1,36 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@sanity/client';
+import { createClient, type SanityClient } from '@sanity/client';
 
-const client = createClient({
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID!,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
-  apiVersion: '2024-01-01',
-  useCdn: true,
-  // Disable SSL verification in development (fixes certificate issues)
-  ...(process.env.NODE_ENV === 'development' && {
-    requestTagPrefix: 'dev',
-  }),
-});
+let client: SanityClient | null = null;
 
-// Disable SSL verification for Node.js in development
-if (process.env.NODE_ENV === 'development') {
-  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+function getClient(): SanityClient | null {
+  if (client) return client;
+
+  const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+  if (!projectId) return null;
+
+  client = createClient({
+    projectId,
+    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+    apiVersion: '2024-01-01',
+    useCdn: true,
+  });
+
+  return client;
 }
 
-
-export const dynamic = 'force-dynamic'; // Disable static generation
-export const revalidate = 3600; // ISR - Revalidate every hour
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
+    const sanity = getClient();
+    if (!sanity) {
+      return NextResponse.json(
+        { articles: [], message: 'Sanity CMS not configured' },
+        { status: 200 }
+      );
+    }
+
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
 
@@ -32,7 +40,7 @@ export async function GET(request: NextRequest) {
       query = `*[_type == "article" && category == $category] | order(publishedAt desc)`;
     }
 
-    const articles = await client.fetch(query, { category });
+    const articles = await sanity.fetch(query, { category });
 
     return NextResponse.json(
       { articles },
