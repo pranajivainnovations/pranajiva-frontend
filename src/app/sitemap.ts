@@ -5,12 +5,16 @@ const MEDUSA_BACKEND_URL = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_URL || 'http:/
 
 async function fetchProducts() {
   try {
-    const res = await fetch(`${MEDUSA_BACKEND_URL}/store/products?limit=200`, {
+    const res = await fetch(`${MEDUSA_BACKEND_URL}/store/products?limit=200&expand=collection`, {
       next: { revalidate: 3600 },
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data.products || [];
+    return (data.products || []).filter(
+      (p: any) =>
+        String(p.metadata?.brand || '').toLowerCase() === 'pranajiva' ||
+        String(p.collection?.metadata?.brand || '').toLowerCase() === 'pranajiva'
+    );
   } catch {
     return [];
   }

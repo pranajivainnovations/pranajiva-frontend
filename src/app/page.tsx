@@ -68,7 +68,12 @@ export default function HomePage() {
         const brandCollections = (collectionsRes.collections as Array<Collection & { metadata?: Record<string, unknown> }>).filter(
           (col) => String(col.metadata?.brand || "").toLowerCase() === BRAND
         );
-        setFeaturedProducts(productsRes.products as Product[]);
+        const brandProducts = (productsRes.products as Array<Product & { collection?: { metadata?: Record<string, unknown> } }>).filter((p) => {
+          const productBrand = String(p.metadata?.brand || "").toLowerCase();
+          const collectionBrand = String((p.collection as any)?.metadata?.brand || "").toLowerCase();
+          return productBrand === BRAND || collectionBrand === BRAND;
+        });
+        setFeaturedProducts(brandProducts as Product[]);
         setCollections(brandCollections as Collection[]);
       } catch (error) {
         console.error("Failed to fetch homepage data:", error);

@@ -191,6 +191,14 @@ export function TopNav() {
             >
               Knowledge
             </Link>
+
+            <Link
+              href="/journey"
+              className="block px-4 py-2 text-sm font-medium text-amber-700 hover:text-amber-800 hover:bg-amber-50 rounded transition-colors"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              Wellness Journey
+            </Link>
           </div>
         )}
       </div>

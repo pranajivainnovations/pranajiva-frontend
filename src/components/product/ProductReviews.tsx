@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Star, ThumbsUp, User, ChevronDown } from 'lucide-react';
 import { useReviewStore, type Review } from '@/stores/review-store';
 import { useToastStore } from '@/stores/toast-store';
@@ -148,28 +148,36 @@ function ReviewForm({ productId, onSubmit }: { productId: string; onSubmit: () =
   const [rating, setRating] = useState(0);
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name.trim() || rating === 0 || !body.trim()) {
       addToast('Please fill in all required fields', 'error');
       return;
     }
 
-    addReview({
-      productId,
-      name: name.trim(),
-      rating,
-      title: title.trim(),
-      body: body.trim(),
-      verified: false,
-    });
-    addToast('Thank you for your review!', 'success');
-    setName('');
-    setRating(0);
-    setTitle('');
-    setBody('');
-    onSubmit();
+    setSubmitting(true);
+    try {
+      await addReview({
+        productId,
+        name: name.trim(),
+        rating,
+        title: title.trim(),
+        body: body.trim(),
+        verified: false,
+      });
+      addToast('Thank you for your review!', 'success');
+      setName('');
+      setRating(0);
+      setTitle('');
+      setBody('');
+      onSubmit();
+    } catch {
+      addToast('Failed to submit review. Please try again.', 'error');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -217,8 +225,8 @@ function ReviewForm({ productId, onSubmit }: { productId: string; onSubmit: () =
         <p className="text-xs text-ink-faint mt-1">{body.length}/500</p>
       </div>
 
-      <button type="submit" className="btn-primary">
-        Submit Review
+      <button type="submit" className="btn-primary" disabled={submitting}>
+        {submitting ? 'Submitting...' : 'Submit Review'}
       </button>
     </form>
   );
@@ -231,10 +239,15 @@ interface ProductReviewsProps {
 }
 
 export function ProductReviews({ productId }: ProductReviewsProps) {
-  const { getProductReviews } = useReviewStore();
+  const { getProductReviews, fetchReviews } = useReviewStore();
   const reviews = getProductReviews(productId);
   const [showForm, setShowForm] = useState(false);
   const [showAll, setShowAll] = useState(false);
+
+  // Hydrate reviews from backend on mount
+  useEffect(() => {
+    fetchReviews(productId);
+  }, [productId, fetchReviews]);
 
   const displayedReviews = showAll ? reviews : reviews.slice(0, 3);
 

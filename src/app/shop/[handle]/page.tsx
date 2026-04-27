@@ -49,7 +49,15 @@ async function getProduct(handle: string): Promise<Product | null> {
     if (!response.ok) return null;
     
     const data = await response.json();
-    return data.products?.[0] || null;
+    const product = data.products?.[0] || null;
+    if (!product) return null;
+
+    // Only show pranajiva-brand products
+    const productBrand = String(product.metadata?.brand || '').toLowerCase();
+    const collectionBrand = String(product.collection?.metadata?.brand || '').toLowerCase();
+    if (productBrand !== 'pranajiva' && collectionBrand !== 'pranajiva') return null;
+
+    return product;
   } catch (error) {
     console.error("Failed to fetch product:", error);
     return null;

@@ -73,7 +73,13 @@ export function useProductSuggestions(
           expand: 'variants,variants.prices,type,tags,collection,categories',
         });
 
-        const others = (allProducts || []).filter(
+        // Only include PranaJiva-brand products
+        const brandFiltered = (allProducts || []).filter((p: any) => {
+          const productBrand = String(p.metadata?.brand || '').toLowerCase();
+          const collectionBrand = String(p.collection?.metadata?.brand || '').toLowerCase();
+          return productBrand === 'pranajiva' || collectionBrand === 'pranajiva';
+        });
+        const others = brandFiltered.filter(
           (p: any) => p.id !== currentProduct.id
         ) as SuggestionProduct[];
 
